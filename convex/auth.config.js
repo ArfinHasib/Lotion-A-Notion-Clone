@@ -1,7 +1,7 @@
 export default {
    providers: [
       {
-         domain: 'https://tight-sturgeon-99.clerk.accounts.dev',
+         domain: 'https://moved-bull-64.clerk.accounts.dev',
          applicationID: 'convex',
       },
    ],
