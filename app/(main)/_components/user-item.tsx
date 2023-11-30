@@ -11,9 +11,11 @@ import {
    DropdownMenuSeparator,
    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { SignOutButton } from '@clerk/clerk-react';
+import { SignOutButton, useUser } from '@clerk/clerk-react';
 
-export const UserItem = ({ user }) => {
+export const UserItem = () => {
+   const { user } = useUser();
+
    return (
       <DropdownMenu>
          <DropdownMenuTrigger asChild>
@@ -60,7 +62,7 @@ export const UserItem = ({ user }) => {
                asChild
                className='w-full cursor-pointer text-muted-foreground'
             >
-               <SignOutButton>Lot Out</SignOutButton>
+               <SignOutButton>Log Out</SignOutButton>
             </DropdownMenuItem>
          </DropdownMenuContent>
       </DropdownMenu>
