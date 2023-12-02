@@ -5,7 +5,7 @@ import { Doc, Id } from './_generated/dataModel';
 
 export const getSidebar = query({
    args: {
-      parenDocument: v.optional(v.id('documents')),
+      parentDocument: v.optional(v.id('documents')),
    },
    handler: async (ctx, args) => {
       const identity = await ctx.auth.getUserIdentity();
@@ -19,11 +19,13 @@ export const getSidebar = query({
       const documents = await ctx.db
          .query('documents')
          .withIndex('by_user_parent', (q) =>
-            q.eq('userId', userId).eq('parentDocument', args.parenDocument)
+            q.eq('userId', userId).eq('parentDocument', args.parentDocument)
          )
          .filter((q) => q.eq(q.field('isArchived'), false))
          .order('desc')
          .collect();
+
+      return documents;
    },
 });
 

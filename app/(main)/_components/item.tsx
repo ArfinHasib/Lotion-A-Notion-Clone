@@ -1,10 +1,15 @@
 'use client';
 
-import { ChevronDown, ChevronRight, LucideIcon } from 'lucide-react';
+import { ChevronDown, ChevronRight, LucideIcon, Plus } from 'lucide-react';
 
 import { Id } from '@/convex/_generated/dataModel';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
+
+import { useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 interface ItemProps {
    id?: Id<'documents'>;
@@ -31,6 +36,36 @@ export const Item = ({
    onExpand,
    expanded,
 }: ItemProps) => {
+   const create = useMutation(api.documents.create);
+   const router = useRouter();
+
+   const handleExpand = (
+      event: React.MouseEvent<HTMLDivElement, MouseEvent>
+   ) => {
+      event.stopPropagation();
+      onExpand?.();
+   };
+
+   const onCreate = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+      event.stopPropagation();
+      if (!id) return;
+
+      const promise = create({ title: 'Untitled', parentDocument: id }).then(
+         (documentId) => {
+            if (!expanded) {
+               onExpand?.();
+            }
+            // router.push(`/documents/${documentId}`);
+         }
+      );
+
+      toast.promise(promise, {
+         loading: 'Creating a new note...',
+         success: 'New note created!',
+         error: 'Failed to create a new note.',
+      });
+   };
+
    const ChevronIcon = expanded ? ChevronDown : ChevronRight;
 
    return (
@@ -47,7 +82,7 @@ export const Item = ({
             <div
                role='button'
                className='h-full rounded-sm hover:bg-neutral-300 dark:bg-neutral-600 mr-1'
-               onClick={() => {}}
+               onClick={handleExpand}
             >
                <ChevronIcon className='h-4 w-4 shrink-0 text-muted-foreground' />
             </div>
@@ -62,6 +97,17 @@ export const Item = ({
             <kbd className='ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100'>
                <span className='text-xs'>⌘</span>K
             </kbd>
+         )}
+         {!!id && (
+            <div className='ml-auto flex items-center gap-x-2'>
+               <div
+                  role='button'
+                  onClick={onCreate}
+                  className='opacity-0 group-hover:opacity-100 h-full ml-auto rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600'
+               >
+                  <Plus className='h-4 w-4 text-muted-foreground' />
+               </div>
+            </div>
          )}
       </div>
    );
