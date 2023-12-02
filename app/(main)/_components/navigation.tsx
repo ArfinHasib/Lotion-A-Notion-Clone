@@ -16,6 +16,7 @@ import { toast } from 'sonner';
 import { useMediaQuery } from 'usehooks-ts';
 import { Item } from './item';
 import { UserItem } from './user-item';
+import { DocumentList } from './document-list';
 
 export const Navigation = () => {
    const pathname = usePathname();
@@ -147,7 +148,9 @@ export const Navigation = () => {
                />
             </div>
 
-            <div className='mt-4'></div>
+            <div className='mt-4'>
+               <DocumentList />
+            </div>
             <div
                onMouseDown={handleMouseDown}
                onClick={resetWidth}
