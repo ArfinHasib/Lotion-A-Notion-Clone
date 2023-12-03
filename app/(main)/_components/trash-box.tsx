@@ -1,13 +1,14 @@
 'use client';
 
+import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery, useMutation } from 'convex/react';
-import { api } from '@/convex/_generated/api';
-import { useState } from 'react';
-import { Id } from '@/convex/_generated/dataModel';
-import { toast } from 'sonner';
-import { Spinner } from '@/components/spinner';
 import { Search, Trash, Undo } from 'lucide-react';
+import { toast } from 'sonner';
+
+import { api } from '@/convex/_generated/api';
+import { Id } from '@/convex/_generated/dataModel';
+import { Spinner } from '@/components/spinner';
 import { Input } from '@/components/ui/input';
 import { ConfirmModal } from '@/components/modals/confirm-modal';
 
@@ -38,7 +39,7 @@ export const TrashBox = () => {
       toast.promise(promise, {
          loading: 'Restoring note...',
          success: 'Note restored!',
-         error: 'Failed to restore note.',
+         error: ' Failed to restore note.',
       });
    };
 
@@ -47,8 +48,8 @@ export const TrashBox = () => {
 
       toast.promise(promise, {
          loading: 'Deleting note...',
-         success: 'Note Deleted!',
-         error: 'Failed to Delete note.',
+         success: 'Note deleted!',
+         error: ' Failed to delete note.',
       });
 
       if (params.documentId === documentId) {

@@ -8,23 +8,22 @@ import {
    Plus,
    Trash,
 } from 'lucide-react';
+import { useMutation } from 'convex/react';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import { useUser } from '@clerk/clerk-react';
 
 import { Id } from '@/convex/_generated/dataModel';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
-
-import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
 import {
    DropdownMenu,
+   DropdownMenuTrigger,
    DropdownMenuContent,
    DropdownMenuItem,
-   DropdownMenuTrigger,
+   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
-import { DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu';
-import { useUser } from '@clerk/clerk-react';
 
 interface ItemProps {
    id?: Id<'documents'>;
@@ -52,14 +51,14 @@ export const Item = ({
    expanded,
 }: ItemProps) => {
    const { user } = useUser();
-   const create = useMutation(api.documents.create);
    const router = useRouter();
+   const create = useMutation(api.documents.create);
    const archive = useMutation(api.documents.archive);
 
    const onArchive = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       event.stopPropagation();
       if (!id) return;
-      const promise = archive({ id });
+      const promise = archive({ id }).then(() => router.push('/documents'));
 
       toast.promise(promise, {
          loading: 'Moving to trash...',
@@ -78,13 +77,12 @@ export const Item = ({
    const onCreate = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
       event.stopPropagation();
       if (!id) return;
-
       const promise = create({ title: 'Untitled', parentDocument: id }).then(
          (documentId) => {
             if (!expanded) {
                onExpand?.();
             }
-            // router.push(`/documents/${documentId}`);
+            router.push(`/documents/${documentId}`);
          }
       );
 
@@ -101,7 +99,9 @@ export const Item = ({
       <div
          onClick={onClick}
          role='button'
-         style={{ paddingLeft: level ? `${level * 12 + 12}px` : '12px' }}
+         style={{
+            paddingLeft: level ? `${level * 12 + 12}px` : '12px',
+         }}
          className={cn(
             'group min-h-[27px] text-sm py-1 pr-3 w-full hover:bg-primary/5 flex items-center text-muted-foreground font-medium',
             active && 'bg-primary/5 text-primary'
@@ -110,16 +110,16 @@ export const Item = ({
          {!!id && (
             <div
                role='button'
-               className='h-full rounded-sm hover:bg-neutral-300 dark:bg-neutral-600 mr-1'
+               className='h-full rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600 mr-1'
                onClick={handleExpand}
             >
-               <ChevronIcon className='h-4 w-4 shrink-0 text-muted-foreground' />
+               <ChevronIcon className='h-4 w-4 shrink-0 text-muted-foreground/50' />
             </div>
          )}
          {documentIcon ? (
             <div className='shrink-0 mr-2 text-[18px]'>{documentIcon}</div>
          ) : (
-            <Icon className='shrink-0 h-[18px] mr-2 text-muted-foreground' />
+            <Icon className='shrink-0 h-[18px] w-[18px] mr-2 text-muted-foreground' />
          )}
          <span className='truncate'>{label}</span>
          {isSearch && (
@@ -131,10 +131,13 @@ export const Item = ({
             <div className='ml-auto flex items-center gap-x-2'>
                <DropdownMenu>
                   <DropdownMenuTrigger
-                     onClick={(e) => e.stopPropagation}
+                     onClick={(e) => e.stopPropagation()}
                      asChild
                   >
-                     <div className='opacity-0 group-hover:opacity-100 h-full ml-auto rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600'>
+                     <div
+                        role='button'
+                        className='opacity-0 group-hover:opacity-100 h-full ml-auto rounded-sm hover:bg-neutral-300 dark:hover:bg-neutral-600'
+                     >
                         <MoreHorizontal className='h-4 w-4 text-muted-foreground' />
                      </div>
                   </DropdownMenuTrigger>
@@ -176,7 +179,7 @@ Item.Skeleton = function ItemSkeleton({ level }: { level?: number }) {
          className='flex gap-x-2 py-[3px]'
       >
          <Skeleton className='h-4 w-4' />
-         <Skeleton className='h-4 w-[30p%]' />
+         <Skeleton className='h-4 w-[30%]' />
       </div>
    );
 };

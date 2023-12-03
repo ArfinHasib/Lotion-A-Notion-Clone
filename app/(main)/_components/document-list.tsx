@@ -1,15 +1,15 @@
 'use client';
 
+import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Doc, Id } from '@/convex/_generated/dataModel';
-import { useParams } from 'next/navigation';
-import { useRouter } from 'next/navigation';
-
 import { useQuery } from 'convex/react';
-import { api } from '@/convex/_generated/api';
-import { Item } from './item';
-import { cn } from '@/lib/utils';
 import { FileIcon } from 'lucide-react';
+
+import { Doc, Id } from '@/convex/_generated/dataModel';
+import { api } from '@/convex/_generated/api';
+import { cn } from '@/lib/utils';
+
+import { Item } from './item';
 
 interface DocumentListProps {
    parentDocumentId?: Id<'documents'>;
@@ -36,7 +36,7 @@ export const DocumentList = ({
       parentDocument: parentDocumentId,
    });
 
-   const onReDirect = (documentId: string) => {
+   const onRedirect = (documentId: string) => {
       router.push(`/documents/${documentId}`);
    };
 
@@ -72,7 +72,7 @@ export const DocumentList = ({
             <div key={document._id}>
                <Item
                   id={document._id}
-                  onClick={() => onReDirect}
+                  onClick={() => onRedirect(document._id)}
                   label={document.title}
                   icon={FileIcon}
                   documentIcon={document.icon}
