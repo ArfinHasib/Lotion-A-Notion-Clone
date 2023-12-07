@@ -1,22 +1,23 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Skeleton } from '@/components/ui/skeleton';
-import { api } from '@/convex/_generated/api';
-import { Doc } from '@/convex/_generated/dataModel';
-import { useMutation } from 'convex/react';
 import { useRef, useState } from 'react';
+import { useMutation } from 'convex/react';
 
-interface TItleProps {
+import { Doc } from '@/convex/_generated/dataModel';
+import { api } from '@/convex/_generated/api';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+
+interface TitleProps {
    initialData: Doc<'documents'>;
 }
 
-export const Title = ({ initialData }: TItleProps) => {
+export const Title = ({ initialData }: TitleProps) => {
    const inputRef = useRef<HTMLInputElement>(null);
    const update = useMutation(api.documents.update);
 
-   const [title, setTitle] = useState(initialData.title || 'Undefined');
+   const [title, setTitle] = useState(initialData.title || 'Untitled');
    const [isEditing, setIsEditing] = useState(false);
 
    const enableInput = () => {
@@ -55,6 +56,7 @@ export const Title = ({ initialData }: TItleProps) => {
                onClick={enableInput}
                onBlur={disableInput}
                onChange={onChange}
+               onKeyDown={onKeyDown}
                value={title}
                className='h-7 px-2 focus-visible:ring-transparent'
             />
@@ -65,7 +67,7 @@ export const Title = ({ initialData }: TItleProps) => {
                size='sm'
                className='font-normal h-auto p-1'
             >
-               {initialData?.title}
+               <span className='truncate'>{initialData?.title}</span>
             </Button>
          )}
       </div>
