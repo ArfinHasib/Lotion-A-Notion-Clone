@@ -5,6 +5,8 @@ import * as React from 'react';
 import { useDropzone, type DropzoneOptions } from 'react-dropzone';
 import { twMerge } from 'tailwind-merge';
 
+import { Spinner } from './spinner';
+
 const variants = {
    base: 'relative rounded-md flex justify-center items-center flex-col cursor-pointer min-h-[150px] min-w-[200px] border border-dashed border-gray-400 dark:border-gray-300 transition-colors duration-200 ease-in-out',
    image: 'border-0 p-0 min-h-0 min-w-0 relative shadow-md bg-slate-200 dark:bg-slate-900 rounded-md',
@@ -123,7 +125,12 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
       }, [fileRejections, dropzoneOptions]);
 
       return (
-         <div>
+         <div className='relative'>
+            {disabled && (
+               <div className='flex items-center justify-center absolute inset-y-0 h-full w-full bg-background/80 z-50'>
+                  <Spinner size='lg' />
+               </div>
+            )}
             <div
                {...getRootProps({
                   className: dropZoneClassName,
@@ -147,9 +154,8 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
                   // Upload Icon
                   <div className='flex flex-col items-center justify-center text-xs text-gray-400'>
                      <UploadCloudIcon className='mb-2 h-7 w-7' />
-                     <div className='text-gray-400'>drag & drop to upload</div>
-                     <div className='mt-3'>
-                        <Button disabled={disabled}>select</Button>
+                     <div className='text-gray-400'>
+                        Click or drag file to this area to upload
                      </div>
                   </div>
                )}
