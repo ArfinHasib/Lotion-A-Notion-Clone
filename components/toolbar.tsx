@@ -61,6 +61,12 @@ export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
       });
    };
 
+   // const onRemoveIcon = () => {
+   //    removeIcon({
+   //       id: initialData._id,
+   //    });
+   // };
+
    const onRemoveIcon = () => {
       removeIcon({
          id: initialData._id,
