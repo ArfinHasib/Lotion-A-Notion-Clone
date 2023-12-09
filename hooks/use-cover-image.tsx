@@ -11,3 +11,5 @@ export const useCoverImage = create<coverImageStore>((set) => ({
    onOpen: () => set({ isOpen: true }),
    onClose: () => set({ isOpen: false }),
 }));
+
+// s
