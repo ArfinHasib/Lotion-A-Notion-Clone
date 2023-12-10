@@ -1,14 +1,14 @@
 'use client';
 
-import { Cover } from '@/components/cover';
-import Editor from '@/components/editor';
-import { Toolbar } from '@/components/toolbar';
-import { Skeleton } from '@/components/ui/skeleton';
-import { api } from '@/convex/_generated/api';
-import { Id } from '@/convex/_generated/dataModel';
 import { useMutation, useQuery } from 'convex/react';
 import dynamic from 'next/dynamic';
 import { useMemo } from 'react';
+
+import { api } from '@/convex/_generated/api';
+import { Id } from '@/convex/_generated/dataModel';
+import { Toolbar } from '@/components/toolbar';
+import { Cover } from '@/components/cover';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface DocumentIdPageProps {
    params: {
@@ -49,6 +49,10 @@ const DocumentIdPage = ({ params }: DocumentIdPageProps) => {
             </div>
          </div>
       );
+   }
+
+   if (document === null) {
+      return <div>Not found</div>;
    }
 
    return (
